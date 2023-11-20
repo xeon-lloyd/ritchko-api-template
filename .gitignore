@@ -1,0 +1,8 @@
+#folder
+node_modules/
+.vscode/
+
+#file
+*.apk
+sftp-config.json
+*.pfx
