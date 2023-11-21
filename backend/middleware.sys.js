@@ -17,6 +17,11 @@ module.exports = async function(req, res, next){
             continue;
         }
 
+        if(operationSetting[body.operation] == undefined){
+            tasks.push(new response.NotFound(undefined, `'${body.operation}' 식별자를 찾을 수 없음`));
+            continue;
+        }
+
         const operation = operationSetting[body.operation];
 
 
