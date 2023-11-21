@@ -1,4 +1,4 @@
-const rootResponse = require('../_response.sys.js')
+const rootResponse = require('../_response.default.sys.js')
 
 module.exports = {
     ...rootResponse,
