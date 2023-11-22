@@ -1,5 +1,7 @@
 const operationSetting = require('./_operations.sys.js');
 const response = require('./_response.sys.js');
+const setting = require('./core/setting.js');
+const util = require("./core/util.js");
 
 module.exports = async function(req, res, next){
     if(req.method!='POST'){
@@ -27,17 +29,22 @@ module.exports = async function(req, res, next){
 
         //로그인 필수인데 로그인 안했으면
         if(operation.authRequire){
-            if(req.header('auth')!=undefined){ //나중에 try catch (복호화 로직)으로 변경
+            try{
+                let token = JSON.parse(util.encrypt.decode(req.header('auth')))
+
                 //토큰 유효시간 체크
-                //접속 아이피 체크
-                req.body[i].uid = '123' //로그인 했으면 param에 유저정보 추가
-            }else{
+                if(setting.token.enableTimeExpire && (new Date() - new Date(token.createAt) > setting.token.expire*1000)){
+                    throw "expired token"
+                }
+
+                body.param.uid = token.uid;
+            }catch(e){
                 tasks.push(new response.Unauthorized());
                 continue;
-            }   
+            }
         }
 
-        tasks.push(require(__dirname + operation.logic)(body, req, res))
+        tasks.push(require(__dirname + operation.logic)(body.param, req, res, next))
     }
 
 

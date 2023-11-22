@@ -33,6 +33,11 @@ const setting = {
 
 	encrypt: {
 		key: 'encryptkeyString',
+	},
+
+	token: {
+		enableTimeExpire: false,
+		expire: 3 * 24 * 60 * 60 //s
 	}
 }
 
