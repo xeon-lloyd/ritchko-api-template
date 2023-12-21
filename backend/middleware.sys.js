@@ -26,9 +26,13 @@ module.exports = async function(req, res, next){
 
         const operation = operationSetting[body.operation];
 
-
         //로그인 필수인데 로그인 안했으면
         if(operation.authRequire){
+            if(req.header('auth')==undefined){
+                tasks.push(new response.Unauthorized());
+                continue;
+            }
+
             try{
                 let token = JSON.parse(util.encrypt.decode(req.header('auth')))
 
@@ -39,7 +43,7 @@ module.exports = async function(req, res, next){
 
                 body.param.uid = token.uid;
             }catch(e){
-                tasks.push(new response.Unauthorized());
+                tasks.push(new response.Unauthorized(null, "잘못된 토큰입니다"));
                 continue;
             }
         }

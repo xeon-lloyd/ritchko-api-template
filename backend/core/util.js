@@ -165,6 +165,17 @@ module.exports = {
 		}
 	},
 
+	/* 사용자 토큰 */
+	token: {
+		generateToken: function(uid){
+			let token = {
+				uid,
+				createAt: new Date()
+			}
+			return module.exports.encrypt.encode(JSON.stringify(token));
+		}
+	},
+
 	/* 메일 전송 관련 */
 	mail: {
 		/* 메일 전송 */
