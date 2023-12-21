@@ -20,3 +20,56 @@ for (let i = 0; i < opSec.length; i++) {
         }
     })
 }
+
+
+/* API 요청 버튼 적용 */
+const RequestButton = document.querySelectorAll(".operation > .param > .requset");
+for (let i = 0; i < RequestButton.length; i++) {
+    RequestButton[i].addEventListener('click', (e)=>{
+        let operation = e.currentTarget.parentNode.parentNode.dataset.operation;
+        let param = e.currentTarget.parentNode.querySelector('textarea').value;
+
+        API_Requset(operation, param, e.currentTarget.parentNode.parentNode);
+    })
+}
+
+/* API 요청 매서드 */
+function API_Requset(operation, param, from){
+    const xhr = new XMLHttpRequest();
+    const method = "POST";
+    const url = "/API";
+
+    const data = [{
+        operation,
+        param
+    }];
+
+    xhr.open(method, url);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    const authKey = document.querySelector('.container > .setAuth > .input > input').value;
+    if(authKey){
+        console.log(authKey)
+        xhr.setRequestHeader('auth', authKey);
+    }
+
+    xhr.addEventListener('readystatechange', function (event) {
+        const { target } = event;
+
+        if (target.readyState === XMLHttpRequest.DONE) {
+            const { status } = target;
+
+            if (status === 0 || (status >= 200 && status < 400)) {
+                // 요청이 정상적으로 처리 된 경우
+                let result = JSON.parse(target.response)[0]
+                from.querySelector('.param > .requestAt').innerHTML = new Date();
+                from.querySelector('.param > .API_Response').innerHTML = JSON.stringify(result, null, 4);
+            } else {
+                // 에러가 발생한 경우
+            }
+        }
+    });
+
+    xhr.send(JSON.stringify(data));
+}

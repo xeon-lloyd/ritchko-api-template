@@ -31,6 +31,68 @@ router.get("/", function(req, res, next){
         <body>
 
         <div class="container">
+            <div class="documentTitle">${setting.AppName} API Document</div>
+
+            <div class="usage">
+                <div class="title">Usage</div>
+
+                <div class="path">
+                    <div class="label">Path</div>
+                    <div>
+                        <span>POST</span>
+                        ${setting.hostName}/API
+                    </div>
+                </div>
+
+                <div class="body">
+                    <div class="label">Body</div>
+                    <pre>[
+    {
+        "operation": "OperationOne",
+        "param": {
+            "id": "123",
+            "pw": "test"
+        }        
+    },
+    {
+        "operation": "OperationTwo",
+        "param": {
+            "commentPK": 13
+        }        
+    },
+    {
+        "operation": "OtherOperation",
+        "param": {}        
+    }
+]</pre>
+                    <div class="description">
+                        <ul>
+                            <li>API 요청 Path는 /API로 고정</li>
+                            <li>요청 정보는 Body에 배열로 담기며 한 번의 요청으로 여러개의 작업을 시행할 수 있음</li>
+                            <li>각각의 요청 정보는 "Operation"과 "param"으로 이루어져 있음</li>
+                        </ul>
+                    </div>
+                </div>                
+            </div>
+
+
+            <div class="setAuth">
+                <div class="title">Set Auth Key</div>
+                <div class="input">
+                    <div class="label">Auth key</div>
+                    <input placeholder="Auth key" type="password">
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>인증키는 POST 요청시 header에 <b>auth</b> 이름으로 포함</li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="operations">
+                <div class="title">Operations</div>
+            </div>
     `;
 
     let opreationList = Object.keys(operationSetting);
@@ -54,7 +116,7 @@ router.get("/", function(req, res, next){
         let needAuth = ""
         if(operationSetting[opreationList[i]].authRequire) needAuth = `<i class="fa-solid fa-lock"></i>`
         html += `
-            <div class="operation folded">
+            <div class="operation folded" id="${opreationList[i]}" data-operation="${opreationList[i]}">
                 <div class="title">
                     ${opreationList[i]}
                     ${needAuth}
@@ -62,7 +124,10 @@ router.get("/", function(req, res, next){
                 </div>
                 <div class="param">
                     <div class="label">Param</div>
-                    <textarea readonly>${JSON.stringify(operationSetting[opreationList[i]].paramSchema, null, 4)}</textarea>
+                    <textarea>${JSON.stringify(operationSetting[opreationList[i]].paramSchema, null, 4)}</textarea>
+                    <button class="requset">Test Request</button>
+                    <div class="requestAt"></div>
+                    <pre class="API_Response"></pre>
                 </div>
 
                 <div class="response">

@@ -1,4 +1,5 @@
 const setting = {
+	AppName: 'RitchKo',
 	hostName: 'https://example.com',
 
 	isProduction: false,
