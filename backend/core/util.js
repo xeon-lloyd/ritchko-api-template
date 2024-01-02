@@ -210,8 +210,11 @@ module.exports = {
 		auth: null,
 		setAuth: function(){
 			this.auth = new awsS3.S3({
-				accessKeyId: setting.s3.accessKeyId,
-				secretAccessKey: setting.s3.secretAccessKey
+				region: setting.s3.region,
+				credentials: {
+					accessKeyId: setting.s3.accessKeyId,
+					secretAccessKey: setting.s3.secretAccessKey,
+				}
 			});
 		},
 
@@ -220,24 +223,27 @@ module.exports = {
 			else option.Body = await fs.readFile(option.Body);
 
 			try{
-				return await this.auth.upload(option).promise();
+				return this.auth.putObject(option);
 			}catch(e){
-				console.log(e, option.index)
+				console.log(e)
 				return;
-			}
-    		
+			}	
 		},
 
 		download: async function(option){
 			let data = await this.auth.getObject({   
 				Bucket: option.Bucket,      
 				Key: option.Key,
-			}).promise();
+			});
 
-			if(option.fileName==undefined) return data.Body
+			if(option.fileName==undefined) return data.Body.transformToString();
 			else await fs.writeFile(option.fileName, data.Body);
+		},
+
+		delete: async function(option){
+			await this.auth.deleteObject(option);
 		}
-	}
+	},
 }
 
 

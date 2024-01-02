@@ -21,7 +21,8 @@ const setting = {
 
 	s3: {
         accessKeyId: 's3 accessKeyId',
-        secretAccessKey: 's3 secretAccessKey'
+        secretAccessKey: 's3 secretAccessKey',
+		region: 'us-ease'
     },
 
 	gmailSmtp: {
