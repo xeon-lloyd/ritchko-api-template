@@ -24,6 +24,8 @@ module.exports = async function(req, res, next){
             continue;
         }
 
+        if(body.param==undefined) body.param = {};
+
         const operation = operationSetting[body.operation];
 
         //로그인 필수인데 로그인 안했으면
